@@ -9,13 +9,25 @@ import { Task } from '../core/services/task';
   styleUrl: './home.css',
 })
 export class Home {
-  // Injection moderne sans constructor
+
   private taskService = inject(Task);
 
-  // (getTasks() renvoie un Observable)
-  tasks$ = this.taskService.getTasks();
+  // On se branche directement sur le BehaviorSubject
+  tasks$ = this.taskService.tasks$;
+
+  count = 0;
 
   ngOnInit() {
-    console.log('ngOnInit exécuté');
+    setInterval(() => {
+      this.count++;
+    }, 500);
+  }
+
+  addTask() {
+    this.taskService.addTask('Nouvelle tâche ' + Date.now());
+  }
+
+  refreshTasks() {
+    this.taskService.refreshTasks();
   }
 }

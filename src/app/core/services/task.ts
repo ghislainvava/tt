@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core';
-import { of } from 'rxjs';
-import { delay } from 'rxjs/operators';
+import { BehaviorSubject, of } from 'rxjs';
+
+export interface TaskItem {
+  id: number;
+  title: string;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -13,8 +17,24 @@ export class Task {
    
   ];
 
-  getTasks() {
-    return of(this.tasks).pipe(delay(1000));
+   // BehaviorSubject qui stocke la liste de tâches (valeur initiale)
+  private tasksSubject = new BehaviorSubject<TaskItem[]>(this.tasks);
+
+  // Observable public que le composant écoute
+  tasks$ = this.tasksSubject.asObservable();
+
+  // Ajouter une tâche + réémettre la nouvelle liste
+  addTask(title: string) {
+    const newTask: TaskItem = { id: Date.now(), title };
+    this.tasks = [...this.tasks, newTask];
+    this.tasksSubject.next(this.tasks);    // 👈 mise à jour
   }
-  
+
+  // Simuler un refresh ou un "rechargement"
+  refreshTasks() {
+    console.log("Simulation d'un rechargement...");
+    setTimeout(() => {
+      this.tasksSubject.next([...this.tasks]);  // 👈 réémission
+    }, 1500);
+  }
 }
