@@ -1,18 +1,4 @@
-<h2>Liste des tâches (BehaviorSubject)</h2>
-
-<p>Temps écoulé : {{ count / 2 }} secondes</p>
-
-<button (click)="addTask()">Ajouter une tâche</button>
-<button (click)="refreshTasks()">Simuler un refresh</button>
-
-<hr>
-
-@if (tasks$ | async; as tasks) {
-  <ul>
-    @for (t of tasks; track t.id) {
-      <li>{{ t.title }}</li>
-    }
-  </ul>
-} @else {
-  <p>Chargement des tâches ...</p>
-}
+<h2>Accueil</h2>
+<p>{{ messageAccueil$ | async }}</p>
+<p>Bienvenue sur TaskBoard Pro.</p>
+<p><a routerLink="/tasks">Voir la liste des tâches</a></p>

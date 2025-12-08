@@ -1,10 +1,15 @@
-import { Component, inject } from '@angular/core'; 
+import { Component, inject, ViewChild, ViewContainerRef} from '@angular/core'; 
 import { AsyncPipe } from '@angular/common';
+import { delay, of } from 'rxjs';
 import { Task } from '../core/services/task';
+import { TaskHighlight } from '../features/tasks/task-highlight/task-highlight';
+import { RouterLink } from '@angular/router';
+
+
 
 @Component({
   selector: 'app-home',
-  imports: [ AsyncPipe],
+  imports: [RouterLink, AsyncPipe ],    
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
@@ -12,22 +17,25 @@ export class Home {
 
   private taskService = inject(Task);
 
-  // On se branche directement sur le BehaviorSubject
   tasks$ = this.taskService.tasks$;
 
-  count = 0;
+  @ViewChild('highlightContainer', { read: ViewContainerRef })
+  highlightContainer!: ViewContainerRef;
 
-  ngOnInit() {
-    setInterval(() => {
-      this.count++;
-    }, 500);
+  highlight(task: any) {
+    // Nettoyer le conteneur avant d'afficher une nouvelle tâche en avant
+    this.highlightContainer.clear();
+
+    const ref = this.highlightContainer.createComponent(TaskHighlight);
+
+    // On transmet la valeur au composant dynamique
+    ref.instance.title = task.title;
   }
 
-  addTask() {
-    this.taskService.addTask('Nouvelle tâche ' + Date.now());
-  }
+ messageAccueil$ = of("Bonjour", "à", "tous").pipe(
+ delay(1000)
+);
 
-  refreshTasks() {
-    this.taskService.refreshTasks();
-  }
+
+  
 }
