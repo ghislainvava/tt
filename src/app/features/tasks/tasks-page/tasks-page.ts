@@ -5,7 +5,7 @@ import { TaskHighlight } from '../task-highlight/task-highlight';
 
 @Component({
   selector: 'app-tasks-page',
-  imports: [ AsyncPipe ],
+  imports: [ AsyncPipe],
   templateUrl: './tasks-page.html',
   styleUrl: './tasks-page.css',
 })
