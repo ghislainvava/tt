@@ -2,6 +2,7 @@ import { Component, inject, ViewChild, ViewContainerRef } from '@angular/core';
 import { Task } from '../../../core/services/task';
 import { AsyncPipe } from '@angular/common';
 import { TaskHighlight } from '../task-highlight/task-highlight';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-tasks-page',
@@ -37,6 +38,19 @@ highlight(task: any) {
   ref.instance.title = task.title;
 }
 
+toggleTask(id: number): void {
+  this.taskService.toggleTask(id);
+}
+
+// Bonus : Filtrer les tâches actives
+activeTasks$ = this.taskService.tasks$.pipe(
+  map(tasks => tasks.filter(t => !t.completed))
+);
+
+// Bonus : Filtrer les tâches terminées
+completedTasks$ = this.taskService.tasks$.pipe(
+  map(tasks => tasks.filter(t => t.completed))
+);
   
 
 }

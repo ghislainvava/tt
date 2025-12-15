@@ -3,8 +3,16 @@
 @if (tasks$ | async; as tasks) {
   <ul>
     @for (t of tasks; track t.id) {
-      <li>
-        {{ t.title }}
+      <li [class.completed]="t.completed" >
+        <span [style.text-decoration]="t.completed ? 'line-through' : 'none'"
+          [style.color]="t.completed ? '#999' : '#000'">
+      {{ t.title }}
+    </span>
+    
+    <!-- Bouton pour terminer/réactiver -->
+    <button (click)="toggleTask(t.id)">
+      {{ t.completed ? '↩️ Réactiver' : '✅ Terminer' }}
+    </button>
         <button type="button" (click)="highlight(t)">
           Mettre en avant
         </button>

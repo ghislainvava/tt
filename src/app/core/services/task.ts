@@ -4,6 +4,7 @@ import { BehaviorSubject, of, tap } from 'rxjs';
 export interface TaskItem {
   id: number;
   title: string;
+  completed:boolean //ajout pourtâche terminée
 }
 
 @Injectable({
@@ -11,9 +12,9 @@ export interface TaskItem {
 })
 export class Task {
   private tasks = [
-    { id: 1, title: 'préparer le cours Angular' },
-    { id: 2, title: 'Relire le module Rxjs' },
-    { id: 3, title: 'Corriger les TPs' },
+    { id: 1, title: 'préparer le cours Angular', completed: false},
+    { id: 2, title: 'Relire le module Rxjs', completed: false},
+    { id: 3, title: 'Corriger les TPs', completed: false },
    
   ];
 
@@ -26,11 +27,18 @@ export class Task {
 tasks$ = this.tasksSubject.asObservable().pipe(
   tap(tasks => console.log('Nouvelle liste :', tasks))
 );
+
+
   // Ajouter une tâche + réémettre la nouvelle liste
-  addTask(title: string) {
-    const newTask: TaskItem = { id: this.nextId++, title };
-    this.tasks = [...this.tasks, newTask];
-    this.tasksSubject.next(this.tasks);    // 👈 mise à jour
+  addTask(title: string) :void {
+    const currentTasks = this.tasksSubject.value;
+    const newTask: TaskItem = { 
+      id: this.nextId++,
+      title,
+      completed: false 
+  };
+    const updatedTasks = [...currentTasks, newTask];
+    this.tasksSubject.next(updatedTasks);    // 👈 mise à jour
   }
   
   //suprimer une tâche + réémettre la nouvelle liste
@@ -39,5 +47,14 @@ tasks$ = this.tasksSubject.asObservable().pipe(
     const updatedTasks = currentTasks.filter(task => task.id !== id); 
     this.tasksSubject.next(updatedTasks);//mettre à jour la liste sans la tâche supprimée
   }
+
+  
+  toggleTask(id: number): void {
+  const currentTasks = this.tasksSubject.value;
+  const updatedTasks = currentTasks.map(task =>
+    task.id === id ? { ...task, completed: !task.completed } : task
+  );
+  this.tasksSubject.next(updatedTasks);
+}
 
 }
