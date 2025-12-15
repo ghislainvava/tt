@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, of, tap } from 'rxjs';
+import { Injectable, inject } from '@angular/core';
+import { BehaviorSubject, of, tap ,} from 'rxjs';
+import { NotificationService } from '../services/notification';
 
 export interface TaskItem {
   id: number;
@@ -25,8 +26,11 @@ export class Task {
 
   // Observable public que le composant écoute
 tasks$ = this.tasksSubject.asObservable().pipe(
-  tap(tasks => console.log('Nouvelle liste :', tasks))
+  tap(tasks => console.log('Nouvelle liste :', tasks)),
+  tap(tasks => console.log(' Nombre de tâches:', tasks.length))
 );
+
+private notificationService = inject(NotificationService);
 
 
   // Ajouter une tâche + réémettre la nouvelle liste
@@ -38,16 +42,21 @@ tasks$ = this.tasksSubject.asObservable().pipe(
       completed: false 
   };
     const updatedTasks = [...currentTasks, newTask];
-    this.tasksSubject.next(updatedTasks);    // 👈 mise à jour
+    this.tasksSubject.next(updatedTasks);    
+    this.notificationService.show(`Tâche "${title}" ajoutée !`, 'success');
   }
   
   //suprimer une tâche + réémettre la nouvelle liste
   deleteTask(id: number): void {
-    const currentTasks = this.tasksSubject.value;
-    const updatedTasks = currentTasks.filter(task => task.id !== id); 
-    this.tasksSubject.next(updatedTasks);//mettre à jour la liste sans la tâche supprimée
+  const currentTasks = this.tasksSubject.value;
+  const task = currentTasks.find(t => t.id === id);
+  const updatedTasks = currentTasks.filter(t => t.id !== id); 
+  this.tasksSubject.next(updatedTasks);
+  
+  if (task) {
+    this.notificationService.show(`Tâche "${task.title}" supprimée`, 'info');
   }
-
+}
 
   toggleTask(id: number): void {
   const currentTasks = this.tasksSubject.value;
@@ -64,5 +73,7 @@ updateTask(id: number, newTitle: string): void {
   );
   this.tasksSubject.next(updatedTasks);
 }
+
+
 
 }
