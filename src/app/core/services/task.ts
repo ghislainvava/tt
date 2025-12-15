@@ -33,5 +33,11 @@ tasks$ = this.tasksSubject.asObservable().pipe(
     this.tasksSubject.next(this.tasks);    // 👈 mise à jour
   }
   
+  //suprimer une tâche + réémettre la nouvelle liste
+  deleteTask(id: number): void {
+    const currentTasks = this.tasksSubject.value;
+    const updatedTasks = currentTasks.filter(task => task.id !== id); 
+    this.tasksSubject.next(updatedTasks);//mettre à jour la liste sans la tâche supprimée
+  }
 
 }

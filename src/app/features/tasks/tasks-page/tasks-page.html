@@ -3,10 +3,16 @@
 @if (tasks$ | async; as tasks) {
   <ul>
     @for (t of tasks; track t.id) {
-      <li>{{ t.title }}</li>
-      <button type="button" (click)="highlight(t)">
-        Mettre en avant
-      </button>
+      <li>
+        {{ t.title }}
+        <button type="button" (click)="highlight(t)">
+          Mettre en avant
+        </button>
+        <!-- 🆕 Bouton Supprimer -->
+        <button type="button" (click)="deleteTask(t.id)" class="btn-delete">
+          Supprimer
+        </button>
+      </li>
     }
   </ul>
 } @else {

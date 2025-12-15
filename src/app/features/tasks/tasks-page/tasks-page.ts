@@ -22,6 +22,12 @@ export class TasksPage {
     this.taskService.addTask(title);
   }
 
+
+  deleteTask(id: number): void {
+    this.taskService.deleteTask(id);
+  }
+
+
  
 highlight(task: any) {
   this.highlightContainer.clear();
