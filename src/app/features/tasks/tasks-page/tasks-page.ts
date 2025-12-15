@@ -4,10 +4,11 @@ import { AsyncPipe } from '@angular/common';
 import { TaskHighlight } from '../task-highlight/task-highlight';
 import { map } from 'rxjs';
 import { TaskEditComponent } from '../task-edit/task-edit';
+import { TaskStats } from '../task-stats/task-stats';
 
 @Component({
   selector: 'app-tasks-page',
-  imports: [ AsyncPipe],
+  imports: [ AsyncPipe, TaskStats],
   templateUrl: './tasks-page.html',
   styleUrl: './tasks-page.css',
 })
