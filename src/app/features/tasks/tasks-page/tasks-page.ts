@@ -18,10 +18,12 @@ export class TasksPage {
   highlightContainer!: ViewContainerRef;
 
 
-  addTask(title: string) {
-    this.taskService.addTask(title);
+  addTask(title: string): void {
+    if (title.trim()) {
+      this.taskService.addTask(title);
+    }
+    
   }
-
 
   deleteTask(id: number): void {
     this.taskService.deleteTask(id);
