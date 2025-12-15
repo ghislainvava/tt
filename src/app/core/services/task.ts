@@ -48,11 +48,19 @@ tasks$ = this.tasksSubject.asObservable().pipe(
     this.tasksSubject.next(updatedTasks);//mettre à jour la liste sans la tâche supprimée
   }
 
-  
+
   toggleTask(id: number): void {
   const currentTasks = this.tasksSubject.value;
   const updatedTasks = currentTasks.map(task =>
     task.id === id ? { ...task, completed: !task.completed } : task
+  );
+  this.tasksSubject.next(updatedTasks);
+}
+
+updateTask(id: number, newTitle: string): void {
+  const currentTasks = this.tasksSubject.value;
+  const updatedTasks = currentTasks.map(task =>
+    task.id === id ? { ...task, title: newTitle } : task
   );
   this.tasksSubject.next(updatedTasks);
 }

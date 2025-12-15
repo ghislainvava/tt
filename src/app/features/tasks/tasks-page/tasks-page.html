@@ -10,16 +10,20 @@
     </span>
     
     <!-- Bouton pour terminer/réactiver -->
-    <button (click)="toggleTask(t.id)">
-      {{ t.completed ? '↩️ Réactiver' : '✅ Terminer' }}
-    </button>
+        <button (click)="toggleTask(t.id)">
+          {{ t.completed ? '↩️ Réactiver' : '✅ Terminer' }}
+        </button>
+        
         <button type="button" (click)="highlight(t)">
           Mettre en avant
         </button>
+       
         <!-- 🆕 Bouton Supprimer -->
         <button type="button" (click)="deleteTask(t.id)" class="btn-delete">
           Supprimer
         </button>
+
+        <button (click)="editTask(t)">Éditer</button>
       </li>
     }
   </ul>
@@ -40,7 +44,20 @@
   <button (click)="addTask(taskInput.value); taskInput.value = ''">
     Ajouter
   </button>
+
+  
+
 </div>
 
+<h3>Tâches en cours</h3>
+@for (t of activeTasks$ | async; track t.id) {
+  <li>{{ t.title }}</li>
+}
 
+<h3>Tâches terminées</h3>
+@for (t of completedTasks$ | async; track t.id) {
+  <li>{{ t.title }}</li>
+}
+
+<div #editContainer></div>
 <div #highlightContainer></div>
