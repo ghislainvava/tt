@@ -6,7 +6,7 @@ import { Component, Input } from '@angular/core';
   template: `
    <div class="task-highlight">
       <h3>Tâche mise en avant</h3>
-      <p>{{ title }}</p>
+      <h2>{{ title }}</h2>
     </div>
   `,
   styleUrl: './task-highlight.css',

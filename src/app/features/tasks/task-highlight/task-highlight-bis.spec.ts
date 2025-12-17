@@ -1,32 +1,37 @@
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TaskHighlight } from './task-highlight';
 
-// fdescribe('TaskHighlight ', () => {
+describe('TaskHighlight Component', () => {
+  let component: TaskHighlight;
+  let fixture: ComponentFixture<TaskHighlight>;
 
-//   it('devrait initialiser title avec une chaîne vide', () => {
-//     const component = new TaskHighlight();
-//     expect(component.title).toBe('');
-//   });
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [TaskHighlight]  // Standalone component
+    }).compileComponents();
 
-//   it('devrait permettre de changer le titre', () => {
-//     const component = new TaskHighlight();
-//     component.title = 'Tâche en avant';
-//     expect(component.title).toBe('Tâche en avant');
-//   });
-
-// });
-
-fdescribe('TaskHighlight (exercices erreurs)', () => {
-
-  it('doit provoquer une erreur simple d’assertion', () => {
-    const component = new TaskHighlight();
-    expect(component.title).toBe('Toto'); // 
+    fixture = TestBed.createComponent(TaskHighlight);
+    component = fixture.componentInstance;
   });
 
-  it('doit provoquer une erreur DOM sans TestBed', () => {
-    const component = new TaskHighlight();
-    component.title = 'Bonjour';
+  it('devrait être créé', () => {
+    expect(component).toBeTruthy();
+  });
 
-    const compiled = (component as any).nativeElement;
-    expect(compiled.querySelector('p')?.textContent).toContain('Bonjour');
+  it('devrait afficher le titre passé en @Input', () => {
+    // ARRANGE : Définir la valeur de @Input
+    component.title = 'Apprendre Angular';
+    
+    // ACT : Déclencher la détection de changements
+    fixture.detectChanges();
+    
+    // ASSERT : Vérifier que le titre s'affiche
+    const element = fixture.nativeElement;
+    const h2 = element.querySelector('h2');
+    expect(h2.textContent).toBe('Apprendre Angular');
+  });
+
+  it('devrait avoir un titre vide par défaut', () => {
+    expect(component.title).toBe('');
   });
 });

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
-export interface Notification {
+export interface NotificationState {
   message: string;
   type: 'success' | 'error' | 'info';
 }
@@ -10,7 +10,7 @@ export interface Notification {
   providedIn: 'root'
 })
 export class NotificationService {
-  private notificationSubject = new BehaviorSubject<Notification | null>(null);
+  private notificationSubject = new BehaviorSubject<NotificationState | null>(null);
   notification$ = this.notificationSubject.asObservable();
 
   show(message: string, type: 'success' | 'error' | 'info' = 'info'): void {

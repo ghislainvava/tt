@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject, of, tap ,} from 'rxjs';
-import { NotificationService } from '../services/notification';
+import { NotificationService } from './notification-service';
 
 export interface TaskItem {
   id: number;
@@ -74,6 +74,14 @@ updateTask(id: number, newTitle: string): void {
   this.tasksSubject.next(updatedTasks);
 }
 
+getTasks(): TaskItem[] {
+  return this.tasksSubject.value;
+}
+
+clearTasks(): void {
+  this.tasksSubject.next([]);
+  this.nextId = 1;
+}
 
 
 }
