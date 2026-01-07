@@ -1,4 +1,4 @@
-import { Component, inject, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, inject, ViewChild, ViewContainerRef, ChangeDetectionStrategy } from '@angular/core';
 import { Task, TaskItem } from '../../../core/services/task';
 import { AsyncPipe } from '@angular/common';
 import { TaskHighlight } from '../task-highlight/task-highlight';
@@ -8,6 +8,7 @@ import { TaskStats } from '../task-stats/task-stats';
 
 @Component({
   selector: 'app-tasks-page',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ AsyncPipe, TaskStats],
   templateUrl: './tasks-page.html',
   styleUrl: './tasks-page.css',
