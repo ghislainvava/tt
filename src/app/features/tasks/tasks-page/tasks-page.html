@@ -50,9 +50,13 @@
 </div>
 
 <h3>Tâches en cours</h3>
-@for (t of activeTasks$ | async; track t.id) {
-  <li>{{ t.title }}</li>
-}
+<ul>
+  @for (t of activeTasks$ | async; track t.id) {
+    <!-- Démo XSS : Angular échappe {{ }} et SANITIZE aussi innerHTML -->
+    <li [innerHTML]="t.title"></li>
+    <!-- Variante sûre (recommandée) : <li>{{ t.title }}</li> -->
+  }
+</ul>
 
 <h3>Tâches terminées</h3>
 @for (t of completedTasks$ | async; track t.id) {

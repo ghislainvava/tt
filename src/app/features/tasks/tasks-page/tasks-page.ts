@@ -45,12 +45,12 @@ toggleTask(id: number): void {
   this.taskService.toggleTask(id);
 }
 
-// Bonus : Filtrer les tâches actives
+//  Filtrer les tâches actives
 activeTasks$ = this.taskService.tasks$.pipe(
   map(tasks => tasks.filter(t => !t.completed))
 );
 
-// Bonus : Filtrer les tâches terminées
+//  Filtrer les tâches terminées
 completedTasks$ = this.taskService.tasks$.pipe(
   map(tasks => tasks.filter(t => t.completed))
 );
