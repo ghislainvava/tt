@@ -9,7 +9,7 @@ import { TaskStats } from '../task-stats/task-stats';
 @Component({
   selector: 'app-tasks-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ AsyncPipe, TaskStats],
+  imports: [ AsyncPipe, TaskStats, TaskHighlight, TaskEditComponent ],
   templateUrl: './tasks-page.html',
   styleUrl: './tasks-page.css',
 })
@@ -18,62 +18,38 @@ export class TasksPage {
 
   tasks$ = this.taskService.tasks$;
 
-  @ViewChild('highlightContainer', { read: ViewContainerRef })
-  highlightContainer!: ViewContainerRef;
-
+  // État UI
+  highlightedTask: TaskItem | null = null;
+  editingTask: TaskItem | null = null;
 
   addTask(title: string): void {
     if (title.trim()) {
       this.taskService.addTask(title);
     }
-    
+  }
+
+  toggleTask(id: number): void {
+    this.taskService.toggleTask(id);
   }
 
   deleteTask(id: number): void {
     this.taskService.deleteTask(id);
   }
 
+  highlight(task: TaskItem): void {
+    this.highlightedTask = task;
+  }
 
- 
-highlight(task: any) {
-  this.highlightContainer.clear();
-  const ref = this.highlightContainer.createComponent(TaskHighlight);
-  ref.instance.title = task.title;
-}
+  editTask(task: TaskItem): void {
+    this.editingTask = task;
+  }
 
-toggleTask(id: number): void {
-  this.taskService.toggleTask(id);
-}
-
-//  Filtrer les tâches actives
-activeTasks$ = this.taskService.tasks$.pipe(
-  map(tasks => tasks.filter(t => !t.completed))
-);
-
-//  Filtrer les tâches terminées
-completedTasks$ = this.taskService.tasks$.pipe(
-  map(tasks => tasks.filter(t => t.completed))
-);
-  
-
-@ViewChild('editContainer', { read: ViewContainerRef })
-editContainer!: ViewContainerRef;
-
-editTask(task: TaskItem): void {
-  this.editContainer.clear();
-  const ref = this.editContainer.createComponent(TaskEditComponent);
-  ref.instance.title = task.title;
-  ref.instance.taskId = task.id;
-  
-  ref.instance.onSave.subscribe((data) => {
+  updateTask(data: { id: number; title: string }): void {
     this.taskService.updateTask(data.id, data.title);
-    this.editContainer.clear();
-  });
-  
-  ref.instance.onCancel.subscribe(() => {
-    this.editContainer.clear();
-  });
-}
+    this.editingTask = null;
+  }
 
-
+  cancelEdit(): void {
+    this.editingTask = null;
+  }
 }

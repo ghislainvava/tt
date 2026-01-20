@@ -41,8 +41,7 @@ private notificationService = inject(NotificationService);
       title,
       completed: false 
   };
-    const updatedTasks = [...currentTasks, newTask];
-    this.tasksSubject.next(updatedTasks);    
+    this.tasksSubject.next([...currentTasks, newTask]); // ✅ NOUVELLE RÉFÉRENCE
     this.notificationService.show(`Tâche "${title}" ajoutée !`, 'success');
   }
   

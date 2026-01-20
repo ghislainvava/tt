@@ -3,27 +3,33 @@
 @if (tasks$ | async; as tasks) {
   <ul>
     @for (t of tasks; track t.id) {
-      <li [class.completed]="t.completed" >
-        <span [style.text-decoration]="t.completed ? 'line-through' : 'none'"
+      <li [class.completed]="t.completed">
+
+        <span
+          [style.text-decoration]="t.completed ? 'line-through' : 'none'"
           [style.color]="t.completed ? '#999' : '#000'">
-      {{ t.title }}
-    </span>
-    
-    <!-- Bouton pour terminer/réactiver -->
+          {{ t.title }}
+        </span>
+
+        <!-- Terminer / Réactiver -->
         <button (click)="toggleTask(t.id)">
           {{ t.completed ? '↩️ Réactiver' : '✅ Terminer' }}
         </button>
-        
+
+        <!-- Mise en avant -->
         <button type="button" (click)="highlight(t)">
           Mettre en avant
         </button>
-       
-        <!-- 🆕 Bouton Supprimer -->
+
+        <!-- Suppression -->
         <button type="button" (click)="deleteTask(t.id)" class="btn-delete">
           Supprimer
         </button>
 
-        <button (click)="editTask(t)">Éditer</button>
+        <!-- Édition -->
+        <button type="button" (click)="editTask(t)">
+          Éditer
+        </button>
       </li>
     }
   </ul>
@@ -33,10 +39,31 @@
 
 <hr />
 
+<!-- 🟡 Composant de mise en avant -->
+@if (highlightedTask) {
+  <app-task-highlight
+    [title]="highlightedTask.title">
+  </app-task-highlight>
+}
+
+<hr />
+
+<!-- 🟡 Composant d’édition -->
+@if (editingTask) {
+  <app-task-edit
+    [title]="editingTask.title"
+    [taskId]="editingTask.id"
+    (onSave)="updateTask($event)"
+    (onCancel)="cancelEdit()">
+  </app-task-edit>
+}
+
+<hr />
+
 <h3>Ajouter une tâche</h3>
 <div class="add-task-form">
-  <input 
-    type="text" 
+  <input
+    type="text"
     #taskInput
     placeholder="Entrez le titre de la tâche"
     (keyup.enter)="addTask(taskInput.value); taskInput.value = ''"
@@ -44,26 +71,32 @@
   <button (click)="addTask(taskInput.value); taskInput.value = ''">
     Ajouter
   </button>
-
-  
-
 </div>
 
-<h3>Tâches en cours</h3>
-<ul>
-  @for (t of activeTasks$ | async; track t.id) {
-    <!-- Démo XSS : Angular échappe {{ }} et SANITIZE aussi innerHTML -->
-    <li [innerHTML]="t.title"></li>
-    <!-- Variante sûre (recommandée) : <li>{{ t.title }}</li> -->
-  }
-</ul>
+<hr />
 
-<h3>Tâches terminées</h3>
-@for (t of completedTasks$ | async; track t.id) {
-  <li>{{ t.title }}</li>
+<h3>Tâches en cours</h3>
+
+@if (tasks$ | async; as tasks) {
+
+  <h3>Tâches en cours</h3>
+  <ul>
+    @for (t of tasks; track t.id) {
+      @if (!t.completed) {
+        <li>{{ t.title }}</li>
+      }
+    }
+  </ul>
+
+  <h3>Tâches terminées</h3>
+  <ul>
+    @for (t of tasks; track t.id) {
+      @if (t.completed) {
+        <li>{{ t.title }}</li>
+      }
+    }
+  </ul>
+
 }
 
 <app-task-stats></app-task-stats>
-
-<div #editContainer></div>
-<div #highlightContainer></div>
